@@ -1,358 +1,403 @@
 # 💰 e-Finance
 
-Sistema de **controle financeiro pessoal** desenvolvido para a disciplina de **Programação Orientada a Objetos II (POO II)**.
+Sistema de controle financeiro desenvolvido para a disciplina de **Programação Orientada a Objetos II (POO II)**.
 
-O projeto tem como objetivo aplicar conceitos de **modelagem de domínio, Programação Orientada a Objetos, regras de negócio, testes e boas práticas de desenvolvimento** na construção de uma aplicação financeira.
+O projeto tem como objetivo aplicar conceitos de **modelagem de domínio, orientação a objetos, relacionamentos entre entidades, regras de negócio, testes automatizados e decisões de projeto** na construção de um sistema financeiro.
 
 ---
 
 ## 📌 Sobre o projeto
 
-O **e-Finance** permite que um usuário organize sua vida financeira por meio do cadastro de contas e do registro de movimentações financeiras.
+O **e-Finance** é um sistema de controle financeiro que busca representar operações relacionadas ao gerenciamento de contas e lançamentos financeiros.
 
-O sistema foi desenvolvido inicialmente a partir da **modelagem do domínio**, identificando os principais conceitos do problema antes da implementação das classes.
+O desenvolvimento do projeto é realizado de forma incremental, partindo da **modelagem do domínio** para posteriormente implementar os comportamentos e regras de negócio.
 
-O domínio inicial contempla:
+O domínio inicial é composto pelas seguintes entidades:
 
-* 👤 Usuários
-* 💳 Contas
-* 💰 Movimentações
-* 🏷️ Categorias
+- 💳 Conta
+- 🏷️ Categoria
+- 💰 Lançamento
+- 📊 Fechamento
+- 🔎 Conciliação
+- 📄 Extrato
 
 ---
 
 ## 🎯 Objetivo
 
-O principal objetivo do projeto é desenvolver um sistema capaz de representar e controlar operações financeiras pessoais, permitindo:
+O objetivo do e-Finance é permitir a representação e o controle de informações financeiras, possibilitando o registro de lançamentos e a consolidação das informações de determinado período.
 
-* Cadastrar usuários;
-* Associar contas aos usuários;
-* Registrar receitas e despesas;
-* Categorizar movimentações;
-* Controlar o saldo das contas;
-* Aplicar regras de negócio relacionadas às movimentações financeiras.
-
-Além do desenvolvimento do sistema, o projeto busca aplicar na prática os conceitos estudados em **Programação Orientada a Objetos**.
+Além da construção do sistema, o projeto busca aplicar na prática os conceitos estudados na disciplina de **Programação Orientada a Objetos II**.
 
 ---
 
 ## 🧠 Modelagem do domínio
 
-Antes da implementação, foi realizada uma análise do domínio do problema.
+O desenvolvimento parte da análise do problema e da identificação dos conceitos relevantes do domínio.
 
-O processo utilizado foi:
+O processo de desenvolvimento segue a seguinte sequência:
 
 ```text
 Problema
    ↓
-Narrativa do domínio
+Análise do domínio
    ↓
 Identificação dos conceitos
    ↓
 Identificação das entidades
    ↓
-Definição dos atributos
+Atributos e responsabilidades
    ↓
-Definição dos relacionamentos
+Relacionamentos
    ↓
-Definição das regras de negócio
+Regras de negócio
    ↓
 Implementação
+   ↓
+Testes
 ```
 
-O domínio foi construído buscando representar os conceitos essenciais do controle financeiro sem transformar automaticamente todos os conceitos encontrados em classes.
+A modelagem busca evitar a criação de classes desnecessárias e atribuir a cada objeto uma responsabilidade coerente com o domínio.
 
 ---
 
-## 🏗️ Entidades
-
-### 👤 Usuário
-
-Representa a pessoa que utiliza o sistema.
-
-Principais atributos:
-
-```text
-nome
-email
-senha
-contas
-```
-
-Um usuário pode possuir várias contas.
-
-```text
-Usuário 1 ───────── N Conta
-```
-
----
+## 🏗️ Entidades do domínio
 
 ### 💳 Conta
 
-Representa uma conta financeira pertencente a um usuário.
+Representa uma conta financeira utilizada no sistema.
 
-Principais atributos:
+**Atributos iniciais:**
 
-```text
-usuário
-saldo
-```
+- `nome`
+- `saldo`
 
-Exemplos de contas que podem existir no domínio:
+**Responsabilidade:**
 
-* Conta corrente
-* Poupança
-* Carteira
-
----
-
-### 💰 Movimentação
-
-Representa uma alteração financeira realizada em uma conta.
-
-Principais atributos:
-
-```text
-conta
-tipo
-valor
-categoria
-```
-
-Uma movimentação pode representar:
-
-* **RECEITA**
-* **DESPESA**
+Representar a conta e manter as informações relacionadas ao seu saldo.
 
 ---
 
 ### 🏷️ Categoria
 
-Representa a classificação de uma movimentação financeira.
+Representa a classificação de um lançamento financeiro.
 
-Exemplos:
+**Atributos iniciais:**
 
-* Alimentação
-* Transporte
-* Moradia
-* Lazer
-* Educação
-* Salário
+- `nome`
 
-Uma categoria pode estar associada a várias movimentações.
+**Exemplos:**
+
+- Alimentação
+- Transporte
+- Moradia
+- Lazer
+- Educação
+- Salário
+
+Uma mesma categoria pode ser utilizada por vários lançamentos.
 
 ```text
-Categoria 1 ───────── N Movimentação
+Categoria 1 ───────── N Lançamento
 ```
+
+---
+
+### 💰 Lançamento
+
+Representa um registro financeiro associado a uma conta.
+
+**Atributos iniciais:**
+
+- `descrição`
+- `valor`
+- `data`
+- `categoria`
+
+Um lançamento possui uma categoria e está relacionado à conta na qual a operação financeira ocorre.
+
+```text
+Conta 1 ───────── N Lançamento
+```
+
+---
+
+### 📊 Fechamento
+
+Representa a consolidação dos lançamentos de determinado período.
+
+Sua responsabilidade é trabalhar com um conjunto de lançamentos e produzir informações consolidadas sobre o período.
+
+O tratamento dos lançamentos utilizados pelo fechamento será definido durante a implementação e documentado como uma decisão de projeto.
+
+---
+
+### 🔎 Conciliação
+
+Responsável por verificar a correspondência entre os valores financeiros considerados no processo de conciliação.
+
+A conciliação deverá identificar situações em que os valores não estejam de acordo e apresentar uma falha de forma clara.
+
+A classe `Conciliacao` será mantida como uma responsabilidade própria, separada de `Fechamento`.
+
+---
+
+### 📄 Extrato
+
+Responsável por apresentar um resumo das informações financeiras de determinado período.
+
+O extrato utiliza as informações consolidadas para representar o resultado financeiro do período.
 
 ---
 
 ## 🔗 Relacionamentos
 
-O modelo atual do domínio possui os seguintes relacionamentos:
+O modelo inicial do domínio possui os seguintes relacionamentos:
 
 ```text
-Usuário 1 ───────── N Conta
+Conta 1 ───────── N Lançamento
 
-Conta 1 ───────── N Movimentação
-
-Categoria 1 ────── N Movimentação
+Categoria 1 ───── N Lançamento
 ```
 
 Representação simplificada:
 
 ```text
-                  ┌───────────────┐
-                  │    Usuário    │
-                  └───────┬───────┘
-                          │
-                         1:N
-                          │
-                          ▼
-                  ┌───────────────┐
-                  │     Conta     │
-                  └───────┬───────┘
-                          │
-                         1:N
-                          │
-                          ▼
-                  ┌───────────────┐
-                  │ Movimentação  │
-                  └───────┬───────┘
-                          │
-                         N:1
-                          │
-                          ▼
-                  ┌───────────────┐
-                  │   Categoria   │
-                  └───────────────┘
+┌───────────────┐
+│     Conta     │
+└───────┬───────┘
+        │
+       1:N
+        │
+        ▼
+┌───────────────┐
+│  Lançamento   │
+└───────┬───────┘
+        │
+       N:1
+        │
+        ▼
+┌───────────────┐
+│   Categoria   │
+└───────────────┘
+```
+
+Fluxo de consolidação:
+
+```text
+Lançamentos
+     │
+     ▼
+Fechamento
+     │
+     ▼
+Conciliação
+     │
+     ▼
+Extrato
 ```
 
 ---
 
 ## 📋 Regras de negócio
 
-As principais regras definidas para o domínio são:
+### RN01 — Conta possui saldo
 
-### RN01 — Usuário possui contas
+Toda conta deve possuir um saldo que represente sua situação financeira.
 
-Um usuário pode possuir uma ou mais contas financeiras.
+### RN02 — Lançamento possui valor
 
-### RN02 — Conta pertence a um usuário
+Todo lançamento deve possuir um valor financeiro válido.
 
-Toda conta deve estar associada a um usuário.
+### RN03 — Lançamento possui categoria
 
-### RN03 — Conta possui saldo
+Todo lançamento deve estar associado a uma categoria.
 
-Toda conta possui um saldo que representa seu valor financeiro atual.
+### RN04 — Categoria pode possuir vários lançamentos
 
-### RN04 — Movimentação pertence a uma conta
+Uma mesma categoria pode ser utilizada em diferentes lançamentos.
 
-Toda movimentação deve estar associada a uma conta.
+### RN05 — Conta pode possuir vários lançamentos
 
-### RN05 — Valor válido
+Uma conta pode possuir diversos lançamentos financeiros.
 
-O valor de uma movimentação deve ser maior que zero.
+### RN06 — Fechamento consolida um período
 
-```text
-valor > 0
-```
+O fechamento deve trabalhar com os lançamentos correspondentes ao período analisado.
 
-### RN06 — Tipo da movimentação
+### RN07 — Conciliação verifica os valores
 
-Toda movimentação deve possuir um tipo:
+A conciliação deve comparar os valores envolvidos e identificar divergências.
 
-```text
-RECEITA
-DESPESA
-```
+### RN08 — Extrato representa um período
 
-### RN07 — Receita
-
-Uma receita aumenta o saldo da conta:
-
-```text
-saldo = saldo + valor
-```
-
-### RN08 — Despesa
-
-Uma despesa reduz o saldo da conta:
-
-```text
-saldo = saldo - valor
-```
-
-### RN09 — Categoria
-
-Toda movimentação deve possuir uma categoria.
+O extrato deve apresentar um resumo coerente das informações financeiras do período.
 
 ---
 
 ## 🧩 Decisões de modelagem
 
-Durante a construção do domínio, alguns conceitos foram analisados para evitar a criação desnecessária de entidades.
+### Lançamento em vez de Movimentação
 
-### Receita e Despesa
+Durante a evolução do projeto, o conceito inicialmente chamado de `Movimentacao` foi ajustado para `Lancamento`.
 
-Receita e despesa não são entidades independentes.
-
-Ambas representam uma **Movimentação**, diferenciadas pelo atributo `tipo`.
+A alteração acompanha a nomenclatura utilizada no domínio trabalhado na disciplina e na proposta da primeira entrega.
 
 ```text
-TipoMovimentacao
-
-RECEITA
-DESPESA
+Movimentacao
+      ↓
+Lancamento
 ```
-
-### Categorias
-
-Categorias como `Alimentação`, `Transporte` e `Lazer` não são classes diferentes.
-
-Elas são instâncias da entidade:
-
-```text
-Categoria
-```
-
-Essa abordagem mantém o domínio mais simples e evita classes desnecessárias.
 
 ---
 
-## 📁 Estrutura atual
+### Categoria como entidade
 
-A estrutura inicial do projeto está organizada da seguinte maneira:
+Categorias como `Alimentação`, `Transporte` ou `Moradia` não são classes independentes.
+
+Elas são instâncias da entidade `Categoria`.
+
+```python
+Categoria("Alimentação")
+Categoria("Transporte")
+Categoria("Moradia")
+```
+
+Essa abordagem evita a criação de classes desnecessárias.
+
+---
+
+### Conciliação como classe própria
+
+`Conciliacao` será representada como uma classe independente de `Fechamento`.
+
+As responsabilidades são diferentes:
+
+```text
+Fechamento
+→ consolida informações de um período
+
+Conciliacao
+→ verifica a correspondência dos valores
+```
+
+Manter as responsabilidades separadas torna o modelo mais organizado e facilita a implementação e os testes.
+
+---
+
+### Fechamento e os lançamentos
+
+O tratamento dos lançamentos utilizados pelo `Fechamento` será definido durante a implementação.
+
+A decisão adotada deverá ser documentada no projeto, considerando se os objetos serão **referenciados ou copiados** e qual o impacto dessa escolha no domínio.
+
+---
+
+## 🧪 Testes
+
+O projeto utilizará **pytest** para realizar os testes automatizados.
+
+Os testes deverão verificar tanto situações esperadas quanto situações de erro.
+
+Entre os comportamentos que deverão ser testados:
+
+- [ ] Criação de uma conta
+- [ ] Criação de uma categoria
+- [ ] Criação de um lançamento
+- [ ] Associação entre lançamento e categoria
+- [ ] Associação entre lançamento e conta
+- [ ] Validação dos valores
+- [ ] Funcionamento do fechamento
+- [ ] Conciliação válida
+- [ ] Conciliação com divergência
+- [ ] Geração do extrato
+- [ ] Situações sem lançamentos
+
+---
+
+## 📁 Estrutura do projeto
 
 ```text
 e-finance/
 │
 ├── finance/
 │   ├── __init__.py
-│   ├── usuario.py
 │   ├── conta.py
-│   ├── movimentacao.py
-│   └── categoria.py
+│   ├── categoria.py
+│   ├── lancamento.py
+│   ├── fechamento.py
+│   ├── conciliacao.py
+│   └── extrato.py
 │
 ├── tests/
+│   ├── __init__.py
+│   ├── test_conta.py
+│   ├── test_categoria.py
+│   ├── test_lancamento.py
+│   ├── test_fechamento.py
+│   ├── test_conciliacao.py
+│   └── test_extrato.py
 │
 ├── README.md
-└── ...
+└── pyproject.toml
 ```
 
 ---
 
-## 🐍 Implementação atual
+## 📚 Evolução do projeto
 
-As entidades principais estão sendo implementadas em Python utilizando classes e composição entre os objetos do domínio.
+O desenvolvimento do e-Finance ocorre de forma incremental.
 
-Exemplo simplificado:
+### Módulo 1 — Domínio e primeiras entidades
 
-```python
-class Usuario:
-    def __init__(self, nome: str, email: str, senha: str):
-        self.nome = nome
-        self.email = email
-        self.senha = senha
-        self.contas = []
-```
+Nesta etapa são trabalhados:
 
-Um usuário pode então manter várias contas:
+- Identificação do problema;
+- Análise do domínio;
+- Identificação das entidades;
+- Definição dos atributos;
+- Relacionamentos;
+- Responsabilidades;
+- Implementação inicial;
+- Testes das entidades.
+
+Entidades principais:
 
 ```text
-Usuario
- ├── Conta Corrente
- ├── Poupança
- └── Carteira
+Conta
+Categoria
+Lancamento
 ```
 
 ---
 
-## 🧪 Testes
+### Módulo 2 — Evolução do domínio
 
-Os testes serão utilizados para validar o comportamento das entidades e principalmente as regras de negócio.
+Com a evolução do sistema, novas responsabilidades são incorporadas:
 
-Entre os comportamentos que deverão ser testados estão:
+```text
+Conta
+Categoria
+Lancamento
+      ↓
+Fechamento
+      ↓
+Conciliacao
+      ↓
+Extrato
+```
 
-* Criação de usuário;
-* Associação de contas ao usuário;
-* Criação de movimentações;
-* Associação de categorias;
-* Validação do valor da movimentação;
-* Adição de receitas ao saldo;
-* Subtração de despesas do saldo.
-
-A ferramenta utilizada para os testes será o **pytest**.
+Essa evolução permite aplicar conceitos de colaboração entre objetos, responsabilidades e decisões de projeto.
 
 ---
 
 ## 🛠️ Tecnologias
 
-* **Python**
-* **Programação Orientada a Objetos**
-* **pytest**
-* **Git**
-* **GitHub**
+- **Python**
+- **Programação Orientada a Objetos**
+- **pytest**
+- **Git**
+- **GitHub**
 
 ---
 
@@ -360,30 +405,48 @@ A ferramenta utilizada para os testes será o **pytest**.
 
 **Em desenvolvimento.**
 
-### Implementado
+### Domínio
 
-* [x] Definição inicial do domínio
-* [x] Identificação das entidades
-* [x] Definição dos relacionamentos
-* [x] Definição inicial das regras de negócio
-* [x] Criação das classes principais
+- [x] Identificação do problema
+- [x] Identificação dos conceitos
+- [x] Definição das entidades
+- [x] Definição inicial dos relacionamentos
+- [x] Definição inicial das regras de negócio
+- [x] Ajuste de `Movimentacao` para `Lancamento`
 
-### Em desenvolvimento
+### Implementação
 
-* [ ] Implementação completa das regras de negócio
-* [ ] Testes automatizados
-* [ ] Validações
-* [ ] Evolução do modelo de domínio
-* [ ] Documentação técnica
-* [ ] Novas funcionalidades
+- [ ] `Conta`
+- [ ] `Categoria`
+- [ ] `Lancamento`
+- [ ] `Fechamento`
+- [ ] `Conciliacao`
+- [ ] `Extrato`
+
+### Testes
+
+- [ ] Testes de `Conta`
+- [ ] Testes de `Categoria`
+- [ ] Testes de `Lancamento`
+- [ ] Testes de `Fechamento`
+- [ ] Testes de `Conciliacao`
+- [ ] Testes de `Extrato`
+
+### Documentação
+
+- [x] Documentação inicial do domínio
+- [x] Regras de negócio
+- [x] Relacionamentos
+- [x] Decisões iniciais de modelagem
+- [ ] Documentação das decisões finais de implementação
 
 ---
 
-## 📚 Documentação
+## 📖 Documentação
 
-A documentação completa do domínio contém o processo de modelagem, narrativa, identificação dos conceitos, entidades, relacionamentos, regras de negócio e decisões de modelagem.
+A documentação do domínio apresenta o processo de análise e modelagem utilizado para construir o e-Finance.
 
-A documentação será mantida separadamente do README para que o repositório tenha uma visão geral objetiva, enquanto o documento de domínio apresenta o processo de modelagem com maior profundidade.
+O projeto será atualizado conforme novas etapas da disciplina forem implementadas.
 
 ---
 
@@ -391,8 +454,8 @@ A documentação será mantida separadamente do README para que o repositório t
 
 **Rafael França**
 
-Projeto desenvolvido como parte das atividades da disciplina de **Programação Orientada a Objetos II**.
+Projeto desenvolvido para a disciplina de **Programação Orientada a Objetos II**.
 
 ---
 
-> 🚧 **e-Finance** — Projeto acadêmico em desenvolvimento.
+> 🚧 **e-Finance — Projeto acadêmico em desenvolvimento.**
