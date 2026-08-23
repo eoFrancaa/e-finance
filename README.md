@@ -1,321 +1,415 @@
-# 💰 e-Finance
+# e-Finance
 
-Sistema de controle financeiro desenvolvido para a disciplina de **Programação Orientada a Objetos II (POO II)**.
+Sistema de controle financeiro desenvolvido para a disciplina de Programação Orientada a Objetos II.
 
-O projeto tem como objetivo aplicar conceitos de **modelagem de domínio, orientação a objetos, relacionamentos entre entidades, regras de negócio, testes automatizados e decisões de projeto** na construção de um sistema financeiro.
+O projeto tem como objetivo aplicar conceitos de orientação a objetos na construção de um domínio financeiro, utilizando classes, responsabilidades, relacionamentos entre objetos, regras de negócio e testes automatizados.
 
----
+## Objetivo
 
-## 📌 Sobre o projeto
+O e-Finance representa um domínio financeiro capaz de:
 
-O **e-Finance** é um sistema de controle financeiro que busca representar operações relacionadas ao gerenciamento de contas e lançamentos financeiros.
-
-O desenvolvimento do projeto é realizado de forma incremental, partindo da **modelagem do domínio** para posteriormente implementar os comportamentos e regras de negócio.
-
-O domínio inicial é composto pelas seguintes entidades:
-
-- 💳 Conta
-- 🏷️ Categoria
-- 💰 Lançamento
-- 📊 Fechamento
-- 🔎 Conciliação
-- 📄 Extrato
+- Representar contas financeiras;
+- Organizar lançamentos por categorias;
+- Registrar créditos e débitos;
+- Realizar o fechamento de lançamentos;
+- Calcular créditos, débitos e saldo;
+- Realizar a conciliação financeira;
+- Gerar informações de extrato;
+- Validar regras de negócio;
+- Testar os comportamentos do domínio.
 
 ---
 
-## 🎯 Objetivo
+## Domínio
 
-O objetivo do e-Finance é permitir a representação e o controle de informações financeiras, possibilitando o registro de lançamentos e a consolidação das informações de determinado período.
+O domínio principal do sistema é composto pelas seguintes classes:
 
-Além da construção do sistema, o projeto busca aplicar na prática os conceitos estudados na disciplina de **Programação Orientada a Objetos II**.
+- `Conta`
+- `Categoria`
+- `Lancamento`
+- `Fechamento`
+- `Conciliacao`
+- `Extrato`
 
----
-
-## 🧠 Modelagem do domínio
-
-O desenvolvimento parte da análise do problema e da identificação dos conceitos relevantes do domínio.
-
-O processo de desenvolvimento segue a seguinte sequência:
+### Relacionamento entre os objetos
 
 ```text
-Problema
-   ↓
-Análise do domínio
-   ↓
-Identificação dos conceitos
-   ↓
-Identificação das entidades
-   ↓
-Atributos e responsabilidades
-   ↓
-Relacionamentos
-   ↓
-Regras de negócio
-   ↓
-Implementação
-   ↓
-Testes
-```
+Conta
+  │
+  └──── 1:N ────> Lancamento
+                       │
+                       └──── N:1 ────> Categoria
 
-A modelagem busca evitar a criação de classes desnecessárias e atribuir a cada objeto uma responsabilidade coerente com o domínio.
+Lancamento
+    │
+    ▼
+Fechamento
+    │
+    ├──────────> Conciliacao
+    │
+    └──────────> Extrato
+```
 
 ---
 
-## 🏗️ Entidades do domínio
+# Classes do domínio
 
-### 💳 Conta
+## Conta
 
-Representa uma conta financeira utilizada no sistema.
+Representa uma conta financeira.
 
-**Atributos iniciais:**
+### Atributos
 
 - `nome`
 - `saldo`
 
-**Responsabilidade:**
+### Regras
 
-Representar a conta e manter as informações relacionadas ao seu saldo.
+- O nome da conta é obrigatório;
+- O saldo não pode ser negativo.
 
----
+### Exemplo
 
-### 🏷️ Categoria
-
-Representa a classificação de um lançamento financeiro.
-
-**Atributos iniciais:**
-
-- `nome`
-
-**Exemplos:**
-
-- Alimentação
-- Transporte
-- Moradia
-- Lazer
-- Educação
-- Salário
-
-Uma mesma categoria pode ser utilizada por vários lançamentos.
-
-```text
-Categoria 1 ───────── N Lançamento
+```python
+conta = Conta("Conta Corrente", 1000.0)
 ```
 
 ---
 
-### 💰 Lançamento
+## Categoria
 
-Representa um registro financeiro associado a uma conta.
+Representa a categoria utilizada para classificar um lançamento financeiro.
 
-**Atributos iniciais:**
+### Exemplo
 
-- `descrição`
+```python
+categoria = Categoria("Alimentação")
+```
+
+### Regra
+
+O nome da categoria é obrigatório.
+
+---
+
+## Lancamento
+
+Representa uma movimentação financeira associada a uma conta e a uma categoria.
+
+### Atributos
+
+- `descricao`
 - `valor`
 - `data`
+- `conta`
 - `categoria`
+- `tipo`
 
-Um lançamento possui uma categoria e está relacionado à conta na qual a operação financeira ocorre.
+### Tipos
 
-```text
-Conta 1 ───────── N Lançamento
+O domínio trabalha com dois tipos:
+
+- `CREDITO`
+- `DEBITO`
+
+No código:
+
+```python
+Lancamento.CREDITO
+Lancamento.DEBITO
+```
+
+### Regras
+
+- A descrição é obrigatória;
+- O valor deve ser maior que zero;
+- O tipo deve ser `CREDITO` ou `DEBITO`;
+- O lançamento pertence a uma conta;
+- O lançamento pertence a uma categoria.
+
+### Exemplo
+
+```python
+lancamento = Lancamento(
+    "Salário",
+    5000.0,
+    data,
+    conta,
+    categoria,
+    Lancamento.CREDITO
+)
 ```
 
 ---
 
-### 📊 Fechamento
+# Fechamento
 
-Representa a consolidação dos lançamentos de determinado período.
+A classe `Fechamento` é responsável por consolidar um conjunto de lançamentos.
 
-Sua responsabilidade é trabalhar com um conjunto de lançamentos e produzir informações consolidadas sobre o período.
+Ela fornece os seguintes comportamentos:
 
-O tratamento dos lançamentos utilizados pelo fechamento será definido durante a implementação e documentado como uma decisão de projeto.
-
----
-
-### 🔎 Conciliação
-
-Responsável por verificar a correspondência entre os valores financeiros considerados no processo de conciliação.
-
-A conciliação deverá identificar situações em que os valores não estejam de acordo e apresentar uma falha de forma clara.
-
-A classe `Conciliacao` será mantida como uma responsabilidade própria, separada de `Fechamento`.
-
----
-
-### 📄 Extrato
-
-Responsável por apresentar um resumo das informações financeiras de determinado período.
-
-O extrato utiliza as informações consolidadas para representar o resultado financeiro do período.
-
----
-
-## 🔗 Relacionamentos
-
-O modelo inicial do domínio possui os seguintes relacionamentos:
-
-```text
-Conta 1 ───────── N Lançamento
-
-Categoria 1 ───── N Lançamento
+```python
+total_creditos()
+total_debitos()
+saldo()
 ```
 
-Representação simplificada:
+O saldo é calculado através da regra:
 
 ```text
-┌───────────────┐
-│     Conta     │
-└───────┬───────┘
-        │
-       1:N
-        │
-        ▼
-┌───────────────┐
-│  Lançamento   │
-└───────┬───────┘
-        │
-       N:1
-        │
-        ▼
-┌───────────────┐
-│   Categoria   │
-└───────────────┘
+saldo = total de créditos - total de débitos
 ```
 
-Fluxo de consolidação:
+### Exemplo
 
 ```text
-Lançamentos
-     │
-     ▼
+Créditos: R$ 5.000,00
+Débitos:  R$ 2.000,00
+Saldo:    R$ 3.000,00
+```
+
+### Fechamento sem lançamentos
+
+Quando não existem lançamentos:
+
+```text
+Total de créditos = R$ 0,00
+Total de débitos  = R$ 0,00
+Saldo             = R$ 0,00
+```
+
+Essa situação possui teste automatizado.
+
+---
+
+# Conciliação
+
+A classe `Conciliacao` é responsável por verificar se um fechamento está conciliado.
+
+A regra utilizada é:
+
+```text
+saldo == 0
+```
+
+Quando os créditos e débitos são iguais:
+
+```text
+Créditos = Débitos
+      ↓
+Saldo = 0
+      ↓
+Conciliado
+```
+
+Quando existe divergência:
+
+```text
+Créditos != Débitos
+      ↓
+Saldo != 0
+      ↓
+Não conciliado
+```
+
+O método utilizado é:
+
+```python
+esta_conciliado()
+```
+
+### Decisão de projeto
+
+A `Conciliacao` foi implementada como uma classe própria para separar a responsabilidade de verificar a consistência financeira da responsabilidade de consolidar os lançamentos realizada pelo `Fechamento`.
+
+Dessa forma:
+
+- `Fechamento` consolida os lançamentos;
+- `Conciliacao` verifica a consistência;
+- `Extrato` apresenta os resultados.
+
+---
+
+# Extrato
+
+A classe `Extrato` utiliza um `Fechamento` para apresentar os resultados financeiros consolidados.
+
+Ela disponibiliza:
+
+```python
+total_creditos()
+total_debitos()
+saldo()
+```
+
+O `Extrato` não realiza novamente os cálculos. Ele utiliza as informações fornecidas pelo `Fechamento`.
+
+---
+
+# Regras de negócio
+
+## Conta
+
+```text
+- Nome obrigatório;
+- Saldo não pode ser negativo.
+```
+
+## Categoria
+
+```text
+- Nome obrigatório.
+```
+
+## Lancamento
+
+```text
+- Descrição obrigatória;
+- Valor maior que zero;
+- Tipo deve ser CREDITO ou DEBITO.
+```
+
+## Fechamento
+
+```text
+- Créditos = soma dos lançamentos do tipo CREDITO;
+- Débitos = soma dos lançamentos do tipo DEBITO;
+- Saldo = créditos - débitos.
+```
+
+## Conciliação
+
+```text
+- Saldo igual a zero → conciliado;
+- Saldo diferente de zero → não conciliado.
+```
+
+---
+
+# Decisões de implementação
+
+## Referência dos lançamentos
+
+O `Fechamento` recebe os lançamentos e mantém uma referência à coleção fornecida.
+
+Não são criadas cópias dos objetos `Lancamento`.
+
+Essa decisão foi adotada porque o fechamento trabalha sobre os próprios objetos do domínio e não necessita criar versões independentes dos lançamentos.
+
+## Responsabilidade das classes
+
+As responsabilidades foram distribuídas entre os objetos do domínio.
+
+```text
+Conta
+└── Representa a conta financeira
+
+Categoria
+└── Classifica lançamentos
+
+Lancamento
+└── Representa uma movimentação financeira
+
 Fechamento
-     │
-     ▼
-Conciliação
-     │
-     ▼
+├── Calcula créditos
+├── Calcula débitos
+└── Calcula saldo
+
+Conciliacao
+└── Verifica se o fechamento está conciliado
+
+Extrato
+└── Apresenta os resultados do fechamento
+```
+
+A intenção é evitar concentrar todas as regras em uma única classe.
+
+---
+
+# Testes
+
+O projeto utiliza `pytest` para os testes automatizados.
+
+Os testes verificam tanto comportamentos válidos quanto situações inválidas.
+
+## Testes de Conta
+
+- Criação e validação de conta;
+- Conta sem nome;
+- Conta com saldo negativo.
+
+## Testes de Categoria
+
+- Criação e validação de categoria;
+- Categoria sem nome.
+
+## Testes de Lancamento
+
+- Criação de lançamento;
+- Lançamento com valor negativo;
+- Lançamento com tipo inválido.
+
+## Testes de Fechamento
+
+- Cálculo de créditos;
+- Cálculo de débitos;
+- Cálculo do saldo;
+- Fechamento sem lançamentos.
+
+## Testes de Conciliação
+
+- Fechamento conciliado;
+- Fechamento com divergência.
+
+## Testes de Extrato
+
+- Geração das informações do extrato.
+
+## Teste do fluxo completo
+
+O projeto também possui um teste que percorre o fluxo principal do domínio:
+
+```text
+Conta
+  ↓
+Categoria
+  ↓
+Lancamento
+  ↓
+Fechamento
+  ↓
+Conciliacao
+  ↓
 Extrato
 ```
 
 ---
 
-## 📋 Regras de negócio
+# Execução dos testes
 
-### RN01 — Conta possui saldo
+Para executar os testes, utilize:
 
-Toda conta deve possuir um saldo que represente sua situação financeira.
+```bash
+python3 -m pytest -v
+```
 
-### RN02 — Lançamento possui valor
-
-Todo lançamento deve possuir um valor financeiro válido.
-
-### RN03 — Lançamento possui categoria
-
-Todo lançamento deve estar associado a uma categoria.
-
-### RN04 — Categoria pode possuir vários lançamentos
-
-Uma mesma categoria pode ser utilizada em diferentes lançamentos.
-
-### RN05 — Conta pode possuir vários lançamentos
-
-Uma conta pode possuir diversos lançamentos financeiros.
-
-### RN06 — Fechamento consolida um período
-
-O fechamento deve trabalhar com os lançamentos correspondentes ao período analisado.
-
-### RN07 — Conciliação verifica os valores
-
-A conciliação deve comparar os valores envolvidos e identificar divergências.
-
-### RN08 — Extrato representa um período
-
-O extrato deve apresentar um resumo coerente das informações financeiras do período.
-
----
-
-## 🧩 Decisões de modelagem
-
-### Lançamento em vez de Movimentação
-
-Durante a evolução do projeto, o conceito inicialmente chamado de `Movimentacao` foi ajustado para `Lancamento`.
-
-A alteração acompanha a nomenclatura utilizada no domínio trabalhado na disciplina e na proposta da primeira entrega.
+Resultado atual:
 
 ```text
-Movimentacao
-      ↓
-Lancamento
+14 passed
 ```
 
----
-
-### Categoria como entidade
-
-Categorias como `Alimentação`, `Transporte` ou `Moradia` não são classes independentes.
-
-Elas são instâncias da entidade `Categoria`.
-
-```python
-Categoria("Alimentação")
-Categoria("Transporte")
-Categoria("Moradia")
-```
-
-Essa abordagem evita a criação de classes desnecessárias.
-
----
-
-### Conciliação como classe própria
-
-`Conciliacao` será representada como uma classe independente de `Fechamento`.
-
-As responsabilidades são diferentes:
+Isso significa:
 
 ```text
-Fechamento
-→ consolida informações de um período
-
-Conciliacao
-→ verifica a correspondência dos valores
+14 testes executados
+14 testes aprovados
+0 testes falhos
 ```
 
-Manter as responsabilidades separadas torna o modelo mais organizado e facilita a implementação e os testes.
-
 ---
 
-### Fechamento e os lançamentos
-
-O tratamento dos lançamentos utilizados pelo `Fechamento` será definido durante a implementação.
-
-A decisão adotada deverá ser documentada no projeto, considerando se os objetos serão **referenciados ou copiados** e qual o impacto dessa escolha no domínio.
-
----
-
-## 🧪 Testes
-
-O projeto utilizará **pytest** para realizar os testes automatizados.
-
-Os testes deverão verificar tanto situações esperadas quanto situações de erro.
-
-Entre os comportamentos que deverão ser testados:
-
-- [ ] Criação de uma conta
-- [ ] Criação de uma categoria
-- [ ] Criação de um lançamento
-- [ ] Associação entre lançamento e categoria
-- [ ] Associação entre lançamento e conta
-- [ ] Validação dos valores
-- [ ] Funcionamento do fechamento
-- [ ] Conciliação válida
-- [ ] Conciliação com divergência
-- [ ] Geração do extrato
-- [ ] Situações sem lançamentos
-
----
-
-## 📁 Estrutura do projeto
+# Estrutura do projeto
 
 ```text
 e-finance/
@@ -331,89 +425,72 @@ e-finance/
 │
 ├── tests/
 │   ├── __init__.py
-│   ├── test_conta.py
 │   ├── test_categoria.py
-│   ├── test_lancamento.py
-│   ├── test_fechamento.py
 │   ├── test_conciliacao.py
-│   └── test_extrato.py
+│   ├── test_conta.py
+│   ├── test_fechamento.py
+│   ├── test_fluxo_financeiro.py
+│   └── test_lancamento.py
 │
-├── README.md
-└── pyproject.toml
+├── pyproject.toml
+└── README.md
 ```
 
 ---
 
-## 📚 Evolução do projeto
+# Fluxo principal
 
-O desenvolvimento do e-Finance ocorre de forma incremental.
-
-### Módulo 1 — Domínio e primeiras entidades
-
-Nesta etapa são trabalhados:
-
-- Identificação do problema;
-- Análise do domínio;
-- Identificação das entidades;
-- Definição dos atributos;
-- Relacionamentos;
-- Responsabilidades;
-- Implementação inicial;
-- Testes das entidades.
-
-Entidades principais:
+O fluxo principal do domínio é:
 
 ```text
-Conta
-Categoria
-Lancamento
+1. Criar uma Conta
+       ↓
+2. Criar Categorias
+       ↓
+3. Registrar Lançamentos
+       ↓
+4. Realizar o Fechamento
+       ↓
+5. Calcular créditos, débitos e saldo
+       ↓
+6. Realizar a Conciliação
+       ↓
+7. Gerar o Extrato
 ```
 
----
-
-### Módulo 2 — Evolução do domínio
-
-Com a evolução do sistema, novas responsabilidades são incorporadas:
+### Exemplo
 
 ```text
-Conta
-Categoria
-Lancamento
-      ↓
-Fechamento
-      ↓
-Conciliacao
-      ↓
-Extrato
+Conta Corrente
+      │
+      ├── Salário ........ R$ 5.000,00 → CREDITO
+      │
+      ├── Mercado ........ R$   500,00 → DEBITO
+      │
+      └── Aluguel ........ R$ 1.500,00 → DEBITO
+                         │
+                         ▼
+                    Fechamento
+                         │
+                  Saldo = R$ 3.000
+                         │
+                         ▼
+                       Extrato
 ```
 
-Essa evolução permite aplicar conceitos de colaboração entre objetos, responsabilidades e decisões de projeto.
-
 ---
 
-## 🛠️ Tecnologias
+# Status do projeto
 
-- **Python**
-- **Programação Orientada a Objetos**
-- **pytest**
-- **Git**
-- **GitHub**
+## Domínio
 
----
-## 🚧 Status do projeto
-
-**Primeira versão do domínio implementada.**
-
-### Domínio
-
-- [x] Identificação do problema
-- [x] Identificação dos conceitos
-- [x] Definição das entidades
+- [x] Identificação das entidades
 - [x] Definição dos relacionamentos
 - [x] Definição das responsabilidades
 - [x] Definição das regras de negócio
+- [x] Definição das decisões de implementação
 
-### Implementação
+## Implementação
 
 - [x] `Conta`
 - [x] `Categoria`
@@ -422,33 +499,44 @@ Essa evolução permite aplicar conceitos de colaboração entre objetos, respon
 - [x] `Conciliacao`
 - [x] `Extrato`
 
-### Testes
+## Testes
 
-- [x] Testes de `Conta`
-- [x] Testes de `Categoria`
-- [x] Testes de `Lancamento`
-- [x] Testes de `Fechamento`
-- [x] Testes de `Conciliacao`
-- [x] Testes de `Extrato`
+- [x] Testes unitários
 - [x] Testes de regras de negócio
 - [x] Testes de situações inválidas
+- [x] Teste de fechamento sem lançamentos
+- [x] Testes de conciliação
+- [x] Teste do fluxo completo
+- [x] 14 testes aprovados
 
 ---
 
-## 📖 Documentação
+# Tecnologias utilizadas
 
-A documentação do domínio apresenta o processo de análise e modelagem utilizado para construir o e-Finance.
-
-O projeto será atualizado conforme novas etapas da disciplina forem implementadas.
+- Python
+- pytest
+- Git
+- GitHub
 
 ---
 
-## 👨‍💻 Autor
+# Contexto acadêmico
+
+Projeto desenvolvido para aplicação prática dos conceitos de Programação Orientada a Objetos II, com foco em:
+
+- Modelagem de domínio;
+- Classes e objetos;
+- Encapsulamento;
+- Responsabilidade dos objetos;
+- Colaboração entre objetos;
+- Regras de negócio;
+- Testes automatizados;
+- Organização de código Python.
+
+---
+
+# Autor
 
 **Rafael França**
 
-Projeto desenvolvido para a disciplina de **Programação Orientada a Objetos II**.
-
----
-
-> 🚧 **e-Finance — Projeto acadêmico em desenvolvimento.**
+Projeto acadêmico — e-Finance.
