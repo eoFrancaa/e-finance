@@ -400,45 +400,38 @@ Essa evolução permite aplicar conceitos de colaboração entre objetos, respon
 - **GitHub**
 
 ---
-
 ## 🚧 Status do projeto
 
-**Em desenvolvimento.**
+**Primeira versão do domínio implementada.**
 
 ### Domínio
 
 - [x] Identificação do problema
 - [x] Identificação dos conceitos
 - [x] Definição das entidades
-- [x] Definição inicial dos relacionamentos
-- [x] Definição inicial das regras de negócio
-- [x] Ajuste de `Movimentacao` para `Lancamento`
+- [x] Definição dos relacionamentos
+- [x] Definição das responsabilidades
+- [x] Definição das regras de negócio
 
 ### Implementação
 
-- [ ] `Conta`
-- [ ] `Categoria`
-- [ ] `Lancamento`
-- [ ] `Fechamento`
-- [ ] `Conciliacao`
-- [ ] `Extrato`
+- [x] `Conta`
+- [x] `Categoria`
+- [x] `Lancamento`
+- [x] `Fechamento`
+- [x] `Conciliacao`
+- [x] `Extrato`
 
 ### Testes
 
-- [ ] Testes de `Conta`
-- [ ] Testes de `Categoria`
-- [ ] Testes de `Lancamento`
-- [ ] Testes de `Fechamento`
-- [ ] Testes de `Conciliacao`
-- [ ] Testes de `Extrato`
-
-### Documentação
-
-- [x] Documentação inicial do domínio
-- [x] Regras de negócio
-- [x] Relacionamentos
-- [x] Decisões iniciais de modelagem
-- [ ] Documentação das decisões finais de implementação
+- [x] Testes de `Conta`
+- [x] Testes de `Categoria`
+- [x] Testes de `Lancamento`
+- [x] Testes de `Fechamento`
+- [x] Testes de `Conciliacao`
+- [x] Testes de `Extrato`
+- [x] Testes de regras de negócio
+- [x] Testes de situações inválidas
 
 ---
 
