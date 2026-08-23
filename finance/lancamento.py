@@ -5,9 +5,12 @@ from finance.categoria import Categoria
 
 
 class Lancamento:
-    TIPOS_VALIDOS = {"CREDITO", "DEBITO"}
+    CREDITO = "CREDITO"
+    DEBITO = "DEBITO"
 
-    def __init__(self, descricao: str, valor: float, data: date, conta: Conta, categoria: Categoria, tipo: str):
+    TIPOS_VALIDOS = {CREDITO, DEBITO}
+
+    def __init__(self,descricao: str,valor: float, data: date,conta: Conta,categoria: Categoria,tipo: str):
         if not descricao:
             raise ValueError("A descrição do lançamento é obrigatória.")
 
