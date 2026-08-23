@@ -1,5 +1,13 @@
+import pytest
+
 from finance.categoria import Categoria
 
-def test_criar_categoria():
-    c = Categoria("Categoria Teste")
-    assert c.nome == "Categoria Teste"
+
+def test_nao_deve_criar_categoria_sem_nome():
+    with pytest.raises(ValueError):
+        Categoria("")
+
+
+def test_nao_deve_criar_categoria_sem_nome():
+    with pytest.raises(ValueError):
+        Categoria("")

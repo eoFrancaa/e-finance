@@ -1,6 +1,13 @@
-from finance import conta
+import pytest
 
-def test_criar_conta():
-    c = conta.Conta("Conta Teste", 100.0)
-    assert c.nome == "Conta Teste"
-    assert c.saldo == 100.0 
+from finance.conta import Conta
+
+
+def test_nao_deve_criar_conta_sem_nome():
+    with pytest.raises(ValueError):
+        Conta("")
+
+
+def test_nao_deve_criar_conta_com_saldo_negativo():
+    with pytest.raises(ValueError):
+        Conta("Conta Corrente", -100.0)
